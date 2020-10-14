@@ -22,7 +22,7 @@ namespace Kandi
 
         private static void Main()
         {
-            var sijainti = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.Parent.FullName + @"\tulokset\";
+            var sijainti = Directory.GetParent(Environment.CurrentDirectory).Parent?.Parent?.Parent?.FullName + @"\tulokset\";
 
             while (true)
             {
@@ -37,7 +37,7 @@ namespace Kandi
                     Console.Write("Ajojen lukumäärä: ");
                     AjojenMaara = Convert.ToInt32(Console.ReadLine());
                     Console.Write("Käytettävä algoritmi ([m]ergesort / [q]uicksort): ");
-                    Algoritmi = Console.ReadLine().ToLower();
+                    Algoritmi = Console.ReadLine()?.ToLower();
 
                     if (!(Algoritmi == "m" || Algoritmi == "mergesort" || Algoritmi == "q" || Algoritmi == "quicksort") || Saikeet % 2 != 0)
                     {
@@ -51,10 +51,18 @@ namespace Kandi
                 }
             }
 
-            var tiedostonNimi = (Algoritmi == "m" || Algoritmi == "mergesort") ?
-                "Mergesort_Maara" + AlkioidenMaara + "_Saikeet" + Saikeet + "_" + DateTime.Now + ".csv"
-                :
-                "Quicksort_Maara" + AlkioidenMaara + "_Saikeet" + Saikeet + "_" + DateTime.Now + ".csv";
+            if (Algoritmi == "m")
+            {
+                Algoritmi = "mergesort";
+            }
+
+            if (Algoritmi == "q")
+            {
+                Algoritmi = "quicksort";
+            }
+
+            var tiedostonNimi = Algoritmi + "_Alkioita" + AlkioidenMaara + "_Saikeita" + Saikeet + "_" + DateTime.Now + ".csv";
+
             using var writer = new StreamWriter(sijainti + tiedostonNimi , false, Encoding.UTF8);
             var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
             csv.Configuration.RegisterClassMap<TuloksetMap>();
@@ -68,7 +76,7 @@ namespace Kandi
                 var sekventiaalinenTaulukko = GeneroiListaSatunnaisistaAlkioista(AlkioidenMaara, 0, 2147483647);
                 var rinnakkainenTaulukko = (int[])sekventiaalinenTaulukko.Clone();
                 
-                if (Algoritmi == "m" || Algoritmi == "mergesort")
+                if (Algoritmi == "mergesort")
                 {
                     var mergesort = new Mergesort();
 
@@ -95,7 +103,7 @@ namespace Kandi
                         Console.WriteLine("Virhe mergesortin järjestämisessä");
                     }
                 } 
-                else if (Algoritmi == "q" || Algoritmi == "quicksort")
+                else if (Algoritmi == "quicksort")
                 {
                     //TODO
                 }
