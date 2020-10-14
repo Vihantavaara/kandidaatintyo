@@ -22,10 +22,14 @@ namespace Kandi
 
         private static void Main()
         {
+            var sijainti = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.Parent.FullName + @"\tulokset\";
+
             while (true)
             {
                 try
                 {
+                    Directory.CreateDirectory(sijainti);
+
                     Console.Write("Säikeiden lukumäärä: ");
                     Saikeet = Convert.ToInt32(Console.ReadLine());
                     Console.Write("Alkioiden lukumäärä per taulukko: ");
@@ -35,7 +39,7 @@ namespace Kandi
                     Console.Write("Käytettävä algoritmi ([m]ergesort / [q]uicksort): ");
                     Algoritmi = Console.ReadLine().ToLower();
 
-                    if (!(Algoritmi == "m" || Algoritmi == "mergesort" || Algoritmi == "q" || Algoritmi == "quicksort"))
+                    if (!(Algoritmi == "m" || Algoritmi == "mergesort" || Algoritmi == "q" || Algoritmi == "quicksort") || Saikeet % 2 != 0)
                     {
                         throw new Exception();
                     }
@@ -43,16 +47,15 @@ namespace Kandi
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine("Virhe syötteissä, yritä uudelleen.");
+                    Console.WriteLine("Virhe syötteissä, yritä uudelleen (Huom! Säikeet parillisena).");
                 }
             }
-            
+
             var tiedostonNimi = (Algoritmi == "m" || Algoritmi == "mergesort") ?
                 "Mergesort_Maara" + AlkioidenMaara + "_Saikeet" + Saikeet + "_" + DateTime.Now + ".csv"
                 :
                 "Quicksort_Maara" + AlkioidenMaara + "_Saikeet" + Saikeet + "_" + DateTime.Now + ".csv";
-            using var writer = new StreamWriter(Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.Parent.FullName + @"\" + tiedostonNimi , false,
-                Encoding.UTF8);
+            using var writer = new StreamWriter(sijainti + tiedostonNimi , false, Encoding.UTF8);
             var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
             csv.Configuration.RegisterClassMap<TuloksetMap>();
 

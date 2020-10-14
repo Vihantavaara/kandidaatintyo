@@ -150,6 +150,7 @@ BundleArtifacts/
 !*.[Cc]ache/
 
 # Others
+tulokset/
 Bin/
 Obj/
 ClientBin/
