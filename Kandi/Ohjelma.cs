@@ -71,6 +71,8 @@ namespace Kandi
 
             for (var indeksi = 0; indeksi < AjojenMaara; indeksi++)
             {
+                Console.WriteLine("Suoritetaan " + (indeksi + 1) + ". ajoa");
+
                 var sekventiaalinenKellotus = new Stopwatch();
                 var rinnakkainenKellotus = new Stopwatch();
                 var sekventiaalinenTaulukko = GeneroiListaSatunnaisistaAlkioista(AlkioidenMaara, 0, 2147483647);
@@ -105,7 +107,30 @@ namespace Kandi
                 } 
                 else if (Algoritmi == "quicksort")
                 {
-                    //TODO
+                    var quicksort = new Quicksort();
+
+                    sekventiaalinenKellotus.Start();
+                    quicksort.SekventiaalinenJarjestys(sekventiaalinenTaulukko);
+                    sekventiaalinenKellotus.Stop();
+
+                    rinnakkainenKellotus.Start();
+                    quicksort.RinnakkainenJarjestys(Saikeet, rinnakkainenTaulukko);
+                    rinnakkainenKellotus.Stop();
+
+                    if (sekventiaalinenTaulukko.SequenceEqual(rinnakkainenTaulukko) && Jarjestetty(sekventiaalinenTaulukko))
+                    {
+                        var suoritusajat = new Tulokset
+                        {
+                            RinnakkainenSuoritusaika = rinnakkainenKellotus.ElapsedMilliseconds,
+                            SekventiaalinenSuoritusaika = sekventiaalinenKellotus.ElapsedMilliseconds
+                        };
+
+                        kaikkiSuoritusajat.Add(suoritusajat);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Virhe quicksortin järjestämisessä");
+                    }
                 }
                 else
                 {
@@ -113,6 +138,11 @@ namespace Kandi
                     break;
                 }
             }
+
+            Console.WriteLine(kaikkiSuoritusajat.Count == AjojenMaara
+                ? "Kaikki suoritukset kirjattu tiedostoon."
+                : "Osa suorituksista jäi kirjaamatta tiedostoon.");
+
             csv.WriteRecords(kaikkiSuoritusajat);
             writer.Close();
         }
