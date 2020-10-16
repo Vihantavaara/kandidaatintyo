@@ -81,16 +81,16 @@ namespace Kandi
                     var mergesort = new Mergesort();
 
                     sekventiaalinenKellotus.Start();
-                    var jarjestettySekventiaalinenTaulukko= mergesort.SekventiaalinenJarjestys(sekventiaalinenTaulukko);
+                    mergesort.SekventiaalinenJarjestys(sekventiaalinenTaulukko);
                     sekventiaalinenKellotus.Stop();
 
                     rinnakkainenKellotus.Start();
-                    var jarjestettyRinnakkainenTaulukko = mergesort.RinnakkainenJarjestys(Saikeet, rinnakkainenTaulukko);
+                    mergesort.RinnakkainenJarjestys(Saikeet, rinnakkainenTaulukko);
                     rinnakkainenKellotus.Stop();
 
-                    if (jarjestettySekventiaalinenTaulukko.SequenceEqual(jarjestettyRinnakkainenTaulukko))
+                    if (sekventiaalinenTaulukko.SequenceEqual(rinnakkainenTaulukko) && Jarjestetty(sekventiaalinenTaulukko))
                     {
-                        var suoritusajat = new Tulokset()
+                        var suoritusajat = new Tulokset
                         {
                             RinnakkainenSuoritusaika = rinnakkainenKellotus.ElapsedMilliseconds,
                             SekventiaalinenSuoritusaika = sekventiaalinenKellotus.ElapsedMilliseconds
@@ -123,6 +123,17 @@ namespace Kandi
                 .Select(arvo => RandomNumberGenerator.GetInt32(minimi, maksimi))
                 .ToArray();
             
+        }
+
+        private static bool Jarjestetty(int[] taulukko)
+        {
+            var i = taulukko.Length - 1;
+
+            if (i <= 0) return true;
+            if ((i & 1) > 0) { if (taulukko[i] < taulukko[i - 1]) return false; i--; }
+            for (var ai = taulukko[i]; i > 0; i -= 2)
+                if (ai < (ai = taulukko[i - 1]) || ai < (ai = taulukko[i - 2])) return false;
+            return taulukko[0] <= taulukko[1];
         }
     }
 }
