@@ -22,7 +22,7 @@ namespace Kandi
 
         private static void Main()
         {
-            var sijainti = Directory.GetParent(Environment.CurrentDirectory).Parent?.Parent?.Parent?.FullName + @"\tulokset\";
+            var sijainti = Directory.GetParent(Environment.CurrentDirectory).FullName + @"\tulokset\";
 
             while (true)
             {
