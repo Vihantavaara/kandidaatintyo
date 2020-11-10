@@ -3,6 +3,6 @@
     public interface IAlgoritmi
     {
         public void SekventiaalinenJarjestys(int[] taulukko);
-        public void RinnakkainenJarjestys(int saikeidenMaara, int[] taulukko);
+        public void RinnakkainenJarjestys(int tyolaistenMaara, int[] taulukko);
     }
 }

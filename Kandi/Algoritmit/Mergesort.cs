@@ -25,24 +25,24 @@ namespace Kandi.Algoritmit
         /// vältetään ylimääräistä allokointia ja kopiointia vaihtelemalla
         /// joka rekursiossa taulukoiden paikkoja.
         /// </summary>
-        /// <param name="saikeidenMaara">Käytettävien säikeiden määrä, mukaanlukien pääsäie</param>
+        /// <param name="tyolaistenMaara">Käytettävien säikeiden määrä, mukaanlukien pääsäie</param>
         /// <param name="taulukko">Järjestettävä taulukko</param>
-        public void RinnakkainenJarjestys(int saikeidenMaara, int[] taulukko)
+        public void RinnakkainenJarjestys(int tyolaistenMaara, int[] taulukko)
         {
 
             var aputaulukko = (int[])taulukko.Clone();
 
             // Käytettävät säikeet miinus pääsäie.
-            var saikeet = new Task[saikeidenMaara - 1];
+            var tyolaiset = new Task[tyolaistenMaara - 1];
 
             // Iteraatioiden määrä.
-            var iteraatiot = (int)Math.Log(saikeidenMaara, 2);
+            var iteraatiot = (int)Math.Log(tyolaistenMaara, 2);
 
             // alkioiden määrä per säie ja jakojäännös joka jätetään pääsäikeelle.
-            var osuudenKoko = taulukko.Length / saikeidenMaara;
-            var jakojaannos = taulukko.Length % saikeidenMaara;
+            var osuudenKoko = taulukko.Length / tyolaistenMaara;
+            var jakojaannos = taulukko.Length % tyolaistenMaara;
 
-            var barrier = new Barrier(saikeidenMaara, b =>
+            var barrier = new Barrier(tyolaistenMaara, b =>
             {
                 // Kaksinkertaistetaan osuudet joka iteraation jälkeen.
                 osuudenKoko <<= 1;
@@ -101,9 +101,9 @@ namespace Kandi.Algoritmit
             }
 
             // Muiden säikeiden suoritus.
-            for (var i = 0; i < saikeet.Length; i++)
+            for (var i = 0; i < tyolaiset.Length; i++)
             {
-                saikeet[i] = Task.Factory.StartNew(WorkAction, i + 1);
+                tyolaiset[i] = Task.Factory.StartNew(WorkAction, i + 1);
             }
 
             // Pääsäikeen suoritus.

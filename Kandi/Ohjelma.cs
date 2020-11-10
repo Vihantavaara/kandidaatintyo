@@ -14,7 +14,7 @@ namespace Kandi
 {
     internal class Ohjelma
     {
-        private static int Saikeet { get; set; }
+        private static int Tyolaiset { get; set; }
         private static int AlkioidenMaara { get; set; }
         private static int AjojenMaara { get; set; }
         private static string Algoritmi { get; set; }
@@ -22,7 +22,7 @@ namespace Kandi
 
         private static void Main()
         {
-            var sijainti = Directory.GetParent(Environment.CurrentDirectory).FullName + @"\tulokset\";
+            var sijainti = Environment.CurrentDirectory + @"\tulokset\";
 
             while (true)
             {
@@ -31,7 +31,15 @@ namespace Kandi
                     Directory.CreateDirectory(sijainti);
 
                     Console.Write("Säikeiden lukumäärä: ");
-                    Saikeet = Convert.ToInt32(Console.ReadLine());
+                    Tyolaiset = Convert.ToInt32(Console.ReadLine());
+
+                    if (((int) (Math.Ceiling((Math.Log(Tyolaiset) /
+                                             Math.Log(2)))) != (int) (Math.Floor((Math.Log(Tyolaiset) /
+                                                                                  Math.Log(2))))) || Tyolaiset < 2)
+                    {
+                        throw new Exception();
+                    }
+
                     Console.Write("Alkioiden lukumäärä per taulukko: ");
                     AlkioidenMaara = Convert.ToInt32(Console.ReadLine());
                     Console.Write("Ajojen lukumäärä: ");
@@ -39,7 +47,7 @@ namespace Kandi
                     Console.Write("Käytettävä algoritmi ([m]ergesort / [q]uicksort): ");
                     Algoritmi = Console.ReadLine()?.ToLower();
 
-                    if (!(Algoritmi == "m" || Algoritmi == "mergesort" || Algoritmi == "q" || Algoritmi == "quicksort") || Saikeet % 2 != 0)
+                    if (!(Algoritmi == "m" || Algoritmi == "mergesort" || Algoritmi == "q" || Algoritmi == "quicksort"))
                     {
                         throw new Exception();
                     }
@@ -47,7 +55,7 @@ namespace Kandi
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine("Virhe syötteissä, yritä uudelleen (Huom! Säikeet parillisena).");
+                    Console.WriteLine("Virhe syötteissä, yritä uudelleen (Huom! Säikeet kahden potensseina (2,4,8..)).");
                 }
             }
 
@@ -61,9 +69,9 @@ namespace Kandi
                 Algoritmi = "quicksort";
             }
 
-            var tiedostonNimi = Algoritmi + "_Alkioita" + AlkioidenMaara + "_Saikeita" + Saikeet + "_" + DateTime.Now + ".csv";
+            var tiedostonNimi = Algoritmi + "_Alkioita" + AlkioidenMaara + "_Tyolaisia" + Tyolaiset + ".csv";
 
-            using var writer = new StreamWriter(sijainti + tiedostonNimi , false, Encoding.UTF8);
+            using var writer = new StreamWriter(sijainti + tiedostonNimi , true, Encoding.UTF8);
             var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
             csv.Configuration.RegisterClassMap<TuloksetMap>();
 
@@ -87,7 +95,7 @@ namespace Kandi
                     sekventiaalinenKellotus.Stop();
 
                     rinnakkainenKellotus.Start();
-                    mergesort.RinnakkainenJarjestys(Saikeet, rinnakkainenTaulukko);
+                    mergesort.RinnakkainenJarjestys(Tyolaiset, rinnakkainenTaulukko);
                     rinnakkainenKellotus.Stop();
 
                     if (sekventiaalinenTaulukko.SequenceEqual(rinnakkainenTaulukko) && Jarjestetty(sekventiaalinenTaulukko))
@@ -114,7 +122,7 @@ namespace Kandi
                     sekventiaalinenKellotus.Stop();
 
                     rinnakkainenKellotus.Start();
-                    quicksort.RinnakkainenJarjestys(Saikeet, rinnakkainenTaulukko);
+                    quicksort.RinnakkainenJarjestys(Tyolaiset, rinnakkainenTaulukko);
                     rinnakkainenKellotus.Stop();
 
                     if (sekventiaalinenTaulukko.SequenceEqual(rinnakkainenTaulukko) && Jarjestetty(sekventiaalinenTaulukko))
