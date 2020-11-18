@@ -54,7 +54,7 @@ namespace Kandi.Algoritmit
             });
 
             // Delegaatti, jonka jokainen säie suorittaa. Sisältää indeksin.
-            void WorkAction(object objekti)
+            void Tehtava(object objekti)
             {
                 // Jokaisen säikeen ja sitä vastaavan osuuden indeksi.
                 var indeksi = (int) objekti;
@@ -103,11 +103,11 @@ namespace Kandi.Algoritmit
             // Muiden säikeiden suoritus.
             for (var i = 0; i < tyolaiset.Length; i++)
             {
-                tyolaiset[i] = Task.Factory.StartNew(WorkAction, i + 1);
+                tyolaiset[i] = Task.Factory.StartNew(Tehtava, i + 1);
             }
 
             // Pääsäikeen suoritus.
-            WorkAction(0);
+            Tehtava(0);
 
             // Mikäli iteraatiot ovat parittomia, pitää aputaulukko kopioida taulukkoon,
             // sillä viimeisellä iteraatiolla aputaulukko on järjestetty.

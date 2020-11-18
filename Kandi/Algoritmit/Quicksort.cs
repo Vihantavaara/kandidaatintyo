@@ -48,7 +48,7 @@ namespace Kandi.Algoritmit
             });
 
             // Delegaatti, jonka jokainen säie suorittaa. Sisältää indeksin.
-            void WorkAction(object objekti)
+            void Tehtava(object objekti)
             {
                 // Jokaisen säikeen ja sitä vastaavan osuuden indeksi.
                 var indeksi = (int)objekti;
@@ -97,11 +97,11 @@ namespace Kandi.Algoritmit
             // Muiden säikeiden suoritus.
             for (var i = 0; i < tyolaiset.Length; i++)
             {
-                tyolaiset[i] = Task.Factory.StartNew(WorkAction, i + 1);
+                tyolaiset[i] = Task.Factory.StartNew(Tehtava, i + 1);
             }
 
             // Pääsäikeen suoritus.
-            WorkAction(0);
+            Tehtava(0);
 
             // Mikäli iteraatiot ovat parittomia, pitää aputaulukko kopioida taulukkoon,
             // sillä viimeisellä iteraatiolla aputaulukko on järjestetty.
@@ -110,8 +110,7 @@ namespace Kandi.Algoritmit
         }
 
         /// <summary>
-        /// Quicksort, joka hyödyntää satunnaistettua pivottia. Sekä sekventiaalinen
-        /// että rinnakkainen versio käyttävät tätä. Toimii rekursiivisesti.
+        /// Quicksort. Sekä sekventiaalinen että rinnakkainen versio käyttävät tätä. Toimii rekursiivisesti.
         /// </summary>
         /// <param name="taulukko"></param>
         /// <param name="vasen"></param>
@@ -123,7 +122,7 @@ namespace Kandi.Algoritmit
             if (vasen >= oikea)
                 return;
 
-            var pivotti = RandomPartition(taulukko, vasen, oikea);
+            var pivotti = Partition(taulukko, vasen, oikea);
             QuickSort(taulukko, vasen, pivotti - 1);
             QuickSort(taulukko, pivotti + 1, oikea);
 
@@ -155,25 +154,6 @@ namespace Kandi.Algoritmit
             taulukko[iteroija1] = pivotti;
 
             return iteroija1;
-        }
-
-        /// <summary>
-        /// Satunnaistetaan pivotti vaihtamalla oikean rajan ja satunnaisen arvon paikat.
-        /// </summary>
-        /// <param name="taulukko">Järjestettävä taulukko</param>
-        /// <param name="vasen">Järjestettävän osituksen vasen raja</param>
-        /// <param name="oikea">Järjestettävän osituksen oikea raja</param>
-        /// <returns></returns>
-        private static int RandomPartition(int[] taulukko, int vasen, int oikea)
-        {
-            var satunnaistaja = new Random();
-            var satunnainenAlkio = satunnaistaja.Next(vasen, oikea);
-
-            var pivotti = taulukko[satunnainenAlkio];
-            taulukko[satunnainenAlkio] = taulukko[oikea];
-            taulukko[oikea] = pivotti;
-
-            return Partition(taulukko, vasen, oikea);
         }
 
         /// <summary>
